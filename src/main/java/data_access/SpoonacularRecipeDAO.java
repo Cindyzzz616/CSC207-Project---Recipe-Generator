@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpoonacularRecipeDAO implements RecipeDAO, FilterRecipesDataAccessInterface {
-    private static final String API_KEY = "9c13038e18cc407ca440bd756225cd13"; // Replace with your Spoonacular API key
+    private static final String API_KEY = "11a3b0ea9a20467c89492ea62d206489"; // Replace with your Spoonacular API key
     private static final String BASE_URL = "https://api.spoonacular.com";
     private final OkHttpClient client;
 

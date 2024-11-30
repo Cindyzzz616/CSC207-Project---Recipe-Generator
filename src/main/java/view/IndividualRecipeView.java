@@ -13,7 +13,7 @@ import data_access.GetRecipeId;
 import data_access.UserDAOImpl;
 import entity.*;
 
-public class IndividualRecipeView extends JFrame implements ActionListener {
+class IndividualRecipeView extends JFrame implements ActionListener {
     private final JButton nutritionButton;
     private final JButton bookmarkButton;
     private final JButton urlButton;

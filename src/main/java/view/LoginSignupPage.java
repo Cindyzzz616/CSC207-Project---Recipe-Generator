@@ -3,11 +3,13 @@ package view;
 import data_access.UserDAO;
 import data_access.UserDAOImpl;
 import entity.User;
+import data_access.SpoonacularRecipeDAO;
+import interface_adapter.RecipeController;
+import use_case.SearchRecipe.SearchRecipePresenter;
+import use_case.SearchRecipe.SearchRecipeInteractor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginSignupPage extends JFrame {
     private UserDAO userDAO;
@@ -41,21 +43,11 @@ public class LoginSignupPage extends JFrame {
 
         // Login button
         loginButton = new JButton("Login");
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleLogin();
-            }
-        });
+        loginButton.addActionListener(e -> handleLogin());
 
         // Signup button
         signupButton = new JButton("Sign Up");
-        signupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSignup();
-            }
-        });
+        signupButton.addActionListener(e -> handleSignup());
 
         // Button panel
         JPanel buttonPanel = new JPanel();
@@ -72,11 +64,28 @@ public class LoginSignupPage extends JFrame {
 
         if (userDAO.validateUser(username, password)) {
             JOptionPane.showMessageDialog(this, "Login successful!");
+
+            // Navigate to HomePage instead of RecipeView
             openHomePage(userDAO.findUserByUsername(username));
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Invalid credentials. Please try again.");
         }
+    }
+
+    private void openHomePage(User user) {
+        new HomePage(user); // Navigate to HomePage
+    }
+
+    private void openRecipeView(User user) {
+        // Initialize dependencies for RecipeView
+        SpoonacularRecipeDAO recipeDAO = new SpoonacularRecipeDAO();
+        SearchRecipePresenter presenter = new SearchRecipePresenter();
+        SearchRecipeInteractor interactor = new SearchRecipeInteractor(recipeDAO, presenter);
+        RecipeController controller = new RecipeController(interactor);
+
+        // Open RecipeView
+        new RecipeView(controller, presenter, user);
     }
 
 
@@ -100,10 +109,5 @@ public class LoginSignupPage extends JFrame {
                 JOptionPane.showMessageDialog(this, "Signup failed. Please try again.");
             }
         }
-    }
-
-    private void openHomePage(User user) {
-        new HomePage(user); // Open the HomePage
-        dispose(); // Close the LoginSignupPage
     }
 }
